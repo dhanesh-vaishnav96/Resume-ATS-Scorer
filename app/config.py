@@ -11,6 +11,9 @@ class Settings(BaseSettings):
     SKILLS_DB_PATH: str = "app/data/skills_db.json"
     UPLOADS_DIR: str = "uploads"
     
+    # Redis configuration
+    REDIS_URL: str = "redis://localhost:6379/0"
+    
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 settings = Settings()

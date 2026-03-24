@@ -7,197 +7,227 @@
     <style>
         :root {
             --primary: #2563eb;
+            --secondary: #64748b;
+            --success: #059669;
+            --danger: #dc2626;
+            --warning: #d97706;
             --bg: #f8fafc;
             --card: #ffffff;
             --text: #1e293b;
             --border: #e2e8f0;
         }
 
-        .tag-missing {
-            background: #ffebee;
-            color: #c62828;
-            border: 1px solid #ffcdd2;
-        }
-
-        .tag-soft {
-            background: #e3f2fd;
-            color: #1565c0;
-            border: 1px solid #bbdefb;
-        }
-
-        .tag-other {
-            background: #f3e5f5;
-            color: #7b1fa2;
-            border: 1px solid #e1bee7;
-        }
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', -apple-system, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
+            padding: 2rem;
             display: flex;
             justify-content: center;
-            padding: 2rem;
         }
-        .container {
-            max-width: 800px;
-            width: 100%;
-            background: var(--card);
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-        }
-        h1 { font-size: 1.875rem; color: var(--primary); margin-bottom: 1.5rem; }
+
+        .container { max-width: 900px; width: 100%; background: var(--card); padding: 2rem; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        h1 { font-size: 2rem; color: var(--primary); margin-bottom: 2rem; text-align: center; }
+        
         .form-group { margin-bottom: 1.5rem; }
         label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
-        textarea {
-            width: 100%;
-            height: 150px;
-            padding: 0.75rem;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.875rem;
-            resize: vertical;
-        }
+        textarea { width: 100%; height: 120px; padding: 0.75rem; border: 2px solid var(--border); border-radius: 8px; transition: border-color 0.2s; box-sizing: border-box; }
+        textarea:focus { border-color: var(--primary); outline: none; }
         input[type="file"] { width: 100%; padding: 0.5rem 0; }
-        button {
-            background-color: var(--primary);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            transition: opacity 0.2s;
-        }
-        button:disabled { opacity: 0.5; cursor: not-allowed; }
-        #results { margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 2rem; display: none; }
-        .score-badge { font-size: 2rem; font-weight: 800; color: var(--primary); }
-        .grade { font-size: 1.25rem; font-weight: 600; color: #64748b; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
-        .card-small { padding: 1rem; border: 1px solid var(--border); border-radius: 8px; }
-        .tag { display: inline-block; padding: 0.25rem 0.5rem; background: #dbeafe; color: #1e40af; border-radius: 4px; font-size: 0.75rem; margin: 0.25rem; }
+
+        button { width: 100%; background: var(--primary); color: white; padding: 1rem; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: transform 0.1s; }
+        button:active { transform: scale(0.98); }
+        button:disabled { background: var(--secondary); opacity: 0.7; }
+
+        /* Loading Overlay */
+        #loading { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; color: white; }
+        .spinner { width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 1rem; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Results */
+        .hidden { display: none !important; }
+        #error-alert { background: #fee2e2; color: #b91c1c; padding: 1rem; border-radius: 8px; border: 1px solid #fecaca; margin-top: 1rem; }
+        
+        .dashboard { margin-top: 2rem; border-top: 2px solid var(--border); padding-top: 2rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { background: #f1f5f9; padding: 1.5rem; border-radius: 12px; text-align: center; }
+        .score-val { font-size: 3rem; font-weight: 900; color: var(--primary); }
+        .grade-pill { display: inline-block; padding: 0.25rem 1rem; background: var(--primary); color: white; border-radius: 99px; font-size: 0.8rem; font-weight: 700; margin-top: 0.5rem; }
+
+        .tag { display: inline-block; padding: 0.3rem 0.6rem; background: #e0e7ff; color: #3730a3; border-radius: 6px; font-size: 0.75rem; margin: 0.2rem; font-weight: 500; }
         .tag-missing { background: #fee2e2; color: #991b1b; }
-        .progress-bar { height: 8px; background: #e2e8f0; border-radius: 4px; margin-top: 4px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--primary); }
+        .tag-soft { background: #fef3c7; color: #92400e; }
+        
+        .progress-container { margin-top: 0.5rem; background: #e2e8f0; height: 10px; border-radius: 5px; overflow: hidden; }
+        .progress-bar { background: var(--primary); height: 100%; transition: width 0.5s ease-out; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>ResumeIQ 🚀</h1>
+        
         <div class="form-group">
-            <label>Upload Resume (PDF)</label>
+            <label>1. Upload Resume (PDF)</label>
             <input type="file" id="resume" accept=".pdf">
         </div>
+
         <div class="form-group">
-            <label>Job Description</label>
-            <textarea id="jd" placeholder="Paste the job description here..."></textarea>
+            <label>2. Job Description</label>
+            <textarea id="jd" placeholder="Paste the job requirements here..."></textarea>
         </div>
+
         <button id="analyzeBtn" onclick="analyze()">Analyze Resume →</button>
 
-        <div id="results">
-            <div style="text-align: center;">
-                <div class="score-badge" id="atsScore">0</div>
-                <div class="grade" id="grade">Grade: -</div>
-            </div>
+        <!-- Loading Overlay -->
+        <div id="loading">
+            <div class="spinner"></div>
+            <p>Analyzing with Gemini AI...</p>
+        </div>
 
-            <div style="margin-top: 1.5rem;">
-                <strong>1. Resume Skills (Total Skills Extracted)</strong>
-                <div id="resumeSkills" style="margin-top: 0.5rem;"></div>
-            </div>
+        <!-- Error Alert -->
+        <div id="error-alert" class="hidden"></div>
 
-            <div class="grid" style="margin-top: 1.5rem;">
-                <div class="card-small">
-                    <strong>2. Matched Skills (with JD)</strong>
-                    <div id="matchedSkills" style="margin-top: 0.5rem;"></div>
+        <!-- Result Dashboard -->
+        <div id="result-dashboard" class="dashboard hidden">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <p style="margin:0; font-size:0.8rem; color:var(--secondary)">ATS Score</p>
+                    <div class="score-val" id="res-score">0</div>
+                    <div class="grade-pill" id="res-grade-pill">GRADE</div>
+                    <p style="margin: 0.5rem 0 0; font-size:0.7rem; color:var(--secondary)">Confidence: <span id="res-confidence">0.0</span></p>
                 </div>
-                <div class="card-small">
-                    <strong>3. Missing Skills (from JD)</strong>
-                    <div id="missingSkills" style="margin-top: 0.5rem;"></div>
+                <div class="stat-card">
+                    <strong>Score Breakdown</strong>
+                    <div id="breakdown" style="text-align: left; font-size: 0.8rem; margin-top:0.5rem"></div>
                 </div>
             </div>
 
-            <div class="card-small" style="margin-top: 1.5rem;">
-                <strong>💡 Soft Skills</strong>
-                <div id="softSkills" style="margin-top: 0.5rem;"></div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label>Matched Skills</label>
+                    <div id="matchedSkills"></div>
+                </div>
+                <div class="form-group">
+                    <label>Missing Skills</label>
+                    <div id="missingSkills"></div>
+                </div>
             </div>
 
-            <div class="card-small" style="margin-top: 1rem;">
-                <strong>📊 Score Breakdown</strong>
-                <div id="breakdown" style="margin-top: 0.5rem;"></div>
+            <div class="form-group">
+                <label>Soft Skills & Traits</label>
+                <div id="softSkills"></div>
             </div>
 
-            <div class="card-small" style="margin-top: 1rem;">
-                <strong>💬 Recommendation</strong>
-                <p id="recommendation" style="font-style: italic; color: #475569;"></p>
+            <div class="form-group">
+                <label>AI Detailed Analysis & Recommendation</label>
+                <div id="recommendation" style="background: #f8fafc; padding: 1.25rem; border-radius: 10px; border-left: 4px solid var(--primary); line-height: 1.6; font-style: italic;"></div>
             </div>
         </div>
     </div>
 
     <script>
         async function analyze() {
-            const btn = document.getElementById('analyzeBtn');
-            const resumeFile = document.getElementById('resume').files[0];
-            const jdText = document.getElementById('jd').value;
+            console.log("Analyze function triggered");
+            const fileInput = document.getElementById('resume');
+            const jdInput = document.getElementById('jd');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const loading = document.getElementById('loading');
+            const errorAlert = document.getElementById('error-alert');
+            const resultDashboard = document.getElementById('result-dashboard');
 
-            if (!resumeFile || !jdText) {
-                alert("Please provide both a resume and a job description.");
+            if (!fileInput || !fileInput.files[0] || !jdInput || !jdInput.value.trim()) {
+                alert("Please select a resume and provide a job description.");
                 return;
             }
 
-            btn.disabled = true;
-            btn.innerText = "Analyzing...";
+            // Reset UI
+            if (errorAlert) errorAlert.classList.add('hidden');
+            if (resultDashboard) resultDashboard.classList.add('hidden');
+            if (loading) loading.style.display = 'flex';
+            if (analyzeBtn) analyzeBtn.disabled = true;
 
             const formData = new FormData();
-            formData.append('resume', resumeFile);
-            formData.append('job_description', jdText);
+            formData.append('resume', fileInput.files[0]);
+            formData.append('job_description', jdInput.value);
 
             try {
+                console.log("Sending request to API...");
                 const response = await fetch('/api/v1/analyze', {
                     method: 'POST',
                     body: formData
                 });
 
-                if (!response.ok) throw new Error(await response.text());
-
+                console.log("Response status:", response.status);
                 const data = await response.json();
-                displayResults(data);
+                console.log("Raw Response Data:", data);
+
+                if (!response.ok) {
+                    throw new Error(data.error || "Server error occurred");
+                }
+
+                // Defensive Updater
+                const updateText = (id, val) => {
+                    const el = document.getElementById(id);
+                    if (el) el.innerText = (val !== undefined && val !== null) ? val : "N/A";
+                    else console.warn(`Element #${id} not found`);
+                };
+
+                const updateHTML = (id, html) => {
+                    const el = document.getElementById(id);
+                    if (el) el.innerHTML = html || "";
+                    else console.warn(`Element #${id} not found`);
+                };
+
+                updateText('res-score', data.ats_score);
+                updateText('res-grade-pill', data.grade);
+                updateText('res-confidence', data.confidence_score);
+
+                if (data.resume_skills) {
+                    updateHTML('resumeSkills', data.resume_skills.map(s => `<span class="tag">${s}</span>`).join(''));
+                }
+                if (data.skills_matched) {
+                    updateHTML('matchedSkills', data.skills_matched.map(s => `<span class="tag">${s}</span>`).join(''));
+                }
+                if (data.skills_missing) {
+                    updateHTML('missingSkills', data.skills_missing.map(s => `<span class="tag tag-missing">${s}</span>`).join(''));
+                }
+                if (data.soft_skills) {
+                    updateHTML('softSkills', data.soft_skills.map(s => `<span class="tag tag-soft">${s}</span>`).join(''));
+                }
+                
+                updateText('recommendation', data.recommendation);
+
+                if (data.sub_scores) {
+                    const sub = data.sub_scores;
+                    const breakdownHTML = `
+                        <div style="margin-bottom:0.5rem">Skills: ${sub.skills || 0}/50 <div class="progress-container"><div class="progress-bar" style="width:${(sub.skills || 0)*2}%"></div></div></div>
+                        <div style="margin-bottom:0.5rem">Projects: ${sub.projects || 0}/30 <div class="progress-container"><div class="progress-bar" style="width:${(sub.projects || 0)/0.3*100}%"></div></div></div>
+                        <div style="margin-bottom:0.5rem">Education: ${sub.education || 0}/10 <div class="progress-container"><div class="progress-bar" style="width:${(sub.education || 0)*10}%"></div></div></div>
+                        <div style="margin-bottom:0.5rem">Experience: ${sub.experience || 0}/10 <div class="progress-container"><div class="progress-bar" style="width:${(sub.experience || 0)*10}%"></div></div></div>
+                    `;
+                    updateHTML('breakdown', breakdownHTML);
+                }
+
+                if (resultDashboard) {
+                    resultDashboard.classList.remove('hidden');
+                    console.log("Showing Result Dashboard");
+                    setTimeout(() => {
+                        resultDashboard.scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                }
+
             } catch (err) {
-                alert("Error: " + err.message);
+                console.error("Analysis Exception:", err);
+                if (errorAlert) {
+                    errorAlert.innerText = "Error: " + err.message;
+                    errorAlert.classList.remove('hidden');
+                    errorAlert.scrollIntoView({ behavior: 'smooth' });
+                }
             } finally {
-                btn.disabled = false;
-                btn.innerText = "Analyze Resume →";
+                if (loading) loading.style.display = 'none';
+                if (analyzeBtn) analyzeBtn.disabled = false;
             }
-        }
-
-        function displayResults(data) {
-            document.getElementById('results').style.display = 'block';
-            document.getElementById('atsScore').innerText = data.ats_score + " / 100";
-            document.getElementById('grade').innerText = "Grade: " + data.grade;
-            document.getElementById('recommendation').innerText = data.recommendation;
-
-            const resume = document.getElementById('resumeSkills');
-            resume.innerHTML = data.resume_skills.map(s => `<span class="tag">${s}</span>`).join('');
-
-            const matched = document.getElementById('matchedSkills');
-            matched.innerHTML = data.skills_matched.map(s => `<span class="tag">${s}</span>`).join('');
-
-            const missing = document.getElementById('missingSkills');
-            missing.innerHTML = data.skills_missing.map(s => `<span class="tag tag-missing">${s}</span>`).join('');
-
-            const soft = document.getElementById('softSkills');
-            soft.innerHTML = data.soft_skills.map(s => `<span class="tag tag-soft">${s}</span>`).join('');
-
-            const br = document.getElementById('breakdown');
-            br.innerHTML = `
-                <div>Skills: ${data.sub_scores.skills}/50 <div class="progress-bar"><div class="progress-fill" style="width: ${data.sub_scores.skills*2}%"></div></div></div>
-                <div style="margin-top:0.5rem">Projects: ${data.sub_scores.projects}/30 <div class="progress-bar"><div class="progress-fill" style="width: ${data.sub_scores.projects/30*100}%"></div></div></div>
-                <div style="margin-top:0.5rem">Education: ${data.sub_scores.education}/10 <div class="progress-bar"><div class="progress-fill" style="width: ${data.sub_scores.education*10}%"></div></div></div>
-                <div style="margin-top:0.5rem">Experience: ${data.sub_scores.experience}/10 <div class="progress-bar"><div class="progress-fill" style="width: ${data.sub_scores.experience*10}%"></div></div></div>
-            `;
-            
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
     </script>
 </body>

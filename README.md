@@ -95,11 +95,33 @@ pip install -r requirements.txt
 Copy `.env.example` to `.env` and add your `GEMINI_API_KEY`.
 
 ### 4. Running the App
+
+**Option A: Using the provided script (Recommended)**
+Simply double-click `run.bat` in the root directory. This will automatically activate the virtual environment and start the server.
+
+**Option B: Manual start**
 ```bash
+# Activate Venv
+venv\Scripts\activate
+
 # Start FastAPI
-uvicorn app.main:app --reload
+python -m uvicorn app.main:app --reload
 ```
 Open `frontend/index.html` in your browser to use the UI.
+
+---
+
+## 🛠️ Troubleshooting
+
+### 1. ModuleNotFoundError (e.g., 'slowapi')
+If you see a `ModuleNotFoundError`, it likely means you are running the project in your global Python environment instead of the project's virtual environment. 
+- **Fix**: Use `run.bat` or ensure you run `venv\Scripts\activate` before starting the server.
+
+### 2. Missing Tesseract or Poppler
+If the analyzer fails on scanned PDF resumes:
+- **Tesseract**: Download and install it from [UB-Mannheim/tesseract](https://github.com/UB-Mannheim/tesseract/wiki).
+- **Poppler**: Download from [poppler-windows](https://github.com/oschwartz10612/poppler-windows/releases) and add the `bin/` folder to your Path.
+- **Check Status**: Visit `http://localhost:8000/health` to see if these tools are detected.
 
 ---
 

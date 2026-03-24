@@ -12,6 +12,7 @@ class AnalysisResponse(BaseModel):
     request_id: str
     ats_score: float
     grade: str
+    confidence_score: float
     resume_skills: List[str]
     skills_matched: List[str]
     skills_missing: List[str]

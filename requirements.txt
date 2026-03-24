@@ -1,7 +1,7 @@
 fastapi
-uvicorn
+uvicorn[standard]
 python-multipart
-pydantic
+pydantic>=2.0
 pydantic-settings
 google-generativeai
 pdfplumber
@@ -10,3 +10,10 @@ python-docx
 PyPDF2
 jinja2
 aiofiles
+slowapi
+pytesseract
+pdf2image
+sentence-transformers
+redis
+scikit-learn
+numpy
