@@ -1,6 +1,6 @@
 @echo off
 setlocal
-echo Starting ResumeIQ — AI-Powered ATS Analyzer...
+echo Starting KL Prarambh Resume ATS Scorer...
 echo.
 
 if not exist "venv\Scripts\python.exe" (

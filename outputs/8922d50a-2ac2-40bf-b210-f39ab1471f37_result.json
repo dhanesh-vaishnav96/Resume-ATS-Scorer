@@ -1,0 +1,51 @@
+{
+    "request_id": "8922d50a-2ac2-40bf-b210-f39ab1471f37",
+    "ats_score": 63.0,
+    "grade": "B (Consider)",
+    "confidence_score": 0.76,
+    "resume_skills": [
+        "rest api",
+        "express.js",
+        "c++",
+        "mysql",
+        "nodejs",
+        "bootstrap",
+        "postman",
+        "css",
+        "mongodb",
+        "javascript",
+        "git",
+        "api testing",
+        "html",
+        "react",
+        "manual testing"
+    ],
+    "skills_matched": [
+        "c++",
+        "css",
+        "html",
+        "javascript",
+        "react"
+    ],
+    "skills_missing": [],
+    "skills_other": [
+        "api testing",
+        "bootstrap",
+        "express.js",
+        "git",
+        "manual testing",
+        "mongodb",
+        "mysql",
+        "nodejs",
+        "postman",
+        "rest api"
+    ],
+    "soft_skills": [],
+    "sub_scores": {
+        "skills": 50.0,
+        "projects": 0.0,
+        "education": 9.0,
+        "experience": 4.0
+    },
+    "recommendation": "Candidate excels in c++, css. No major technical gaps detected."
+}

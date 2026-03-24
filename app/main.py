@@ -15,7 +15,7 @@ import os
 # Rate Limiter setup
 limiter = Limiter(key_func=get_remote_address)
 app = FastAPI(
-    title="ResumeIQ — AI-Powered ATS Resume Analyzer",
+    title="KL Prarambh Resume ATS Scorer",
     version="1.1.0"
 )
 app.state.limiter = limiter
@@ -61,7 +61,7 @@ if os.path.exists("frontend"):
 async def read_index():
     if os.path.exists("frontend/index.html"):
         return FileResponse("frontend/index.html")
-    return {"message": "Welcome to ResumeIQ API. UI not found in frontend/ directory."}
+    return {"message": "Welcome to KL Prarambh Resume ATS Scorer API. UI not found in frontend/ directory."}
 
 @app.get("/health", tags=["Health"])
 async def health_check():
@@ -80,8 +80,8 @@ async def health_check():
 
 @app.on_event("startup")
 async def startup_event():
-    logger.info("ResumeIQ application starting up...")
+    logger.info("KL Prarambh application starting up...")
 
 @app.on_event("shutdown")
 async def shutdown_event():
-    logger.info("ResumeIQ application shutting down...")
+    logger.info("KL Prarambh application shutting down...")

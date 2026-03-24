@@ -1,4 +1,4 @@
-# ResumeIQ — AI-Powered ATS Resume Analyzer
+# KL Prarambh — AI-Powered ATS Resume Scorer
 
 > **Production-grade Applicant Tracking System** that evaluates resumes against job descriptions using a hybrid rule-based + LLM pipeline, delivering structured scores and explainable hiring recommendations.
 
