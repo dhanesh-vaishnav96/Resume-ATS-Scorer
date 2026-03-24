@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResumeIQ — AI-Powered ATS Analyzer</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+        }
+
+        .tag-missing {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+        }
+
+        .tag-soft {
+            background: #e3f2fd;
+            color: #1565c0;
+            border: 1px solid #bbdefb;
+        }
+
+        .tag-other {
+            background: #f3e5f5;
+            color: #7b1fa2;
+            border: 1px solid #e1bee7;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        h1 { font-size: 1.875rem; color: var(--primary); margin-bottom: 1.5rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            resize: vertical;
+        }
+        input[type="file"] { width: 100%; padding: 0.5rem 0; }
+        button {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: opacity 0.2s;
+        }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        #results { margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 2rem; display: none; }
+        .score-badge { font-size: 2rem; font-weight: 800; color: var(--primary); }
+        .grade { font-size: 1.25rem; font-weight: 600; color: #64748b; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+        .card-small { padding: 1rem; border: 1px solid var(--border); border-radius: 8px; }
+        .tag { display: inline-block; padding: 0.25rem 0.5rem; background: #dbeafe; color: #1e40af; border-radius: 4px; font-size: 0.75rem; margin: 0.25rem; }
+        .tag-missing { background: #fee2e2; color: #991b1b; }
+        .progress-bar { height: 8px; background: #e2e8f0; border-radius: 4px; margin-top: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ResumeIQ 🚀</h1>
+        <div class="form-group">
+            <label>Upload Resume (PDF)</label>
+            <input type="file" id="resume" accept=".pdf">
+        </div>
+        <div class="form-group">
+            <label>Job Description</label>
+            <textarea id="jd" placeholder="Paste the job description here..."></textarea>
+        </div>
+        <button id="analyzeBtn" onclick="analyze()">Analyze Resume →</button>
+
+        <div id="results">
+            <div style="text-align: center;">
+                <div class="score-badge" id="atsScore">0</div>
+                <div class="grade" id="grade">Grade: -</div>
+            </div>
+
+            <div style="margin-top: 1.5rem;">
+                <strong>1. Resume Skills (Total Skills Extracted)</strong>
+                <div id="resumeSkills" style="margin-top: 0.5rem;"></div>
+            </div>
+
+            <div class="grid" style="margin-top: 1.5rem;">
+                <div class="card-small">
+                    <strong>2. Matched Skills (with JD)</strong>
+                    <div id="matchedSkills" style="margin-top: 0.5rem;"></div>
+                </div>
+                <div class="card-small">
+                    <strong>3. Missing Skills (from JD)</strong>
+                    <div id="missingSkills" style="margin-top: 0.5rem;"></div>
+                </div>
+            </div>
+
+            <div class="card-small" style="margin-top: 1.5rem;">
+                <strong>💡 Soft Skills</strong>
+                <div id="softSkills" style="margin-top: 0.5rem;"></div>
+            </div>
+
+            <div class="card-small" style="margin-top: 1rem;">
+                <strong>📊 Score Breakdown</strong>
+                <div id="breakdown" style="margin-top: 0.5rem;"></div>
+            </div>
+
+            <div class="card-small" style="margin-top: 1rem;">
+                <strong>💬 Recommendation</strong>
+                <p id="recommendation" style="font-style: italic; color: #475569;"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function analyze() {
+            const btn = document.getElementById('analyzeBtn');
+            const resumeFile = document.getElementById('resume').files[0];
+            const jdText = document.getElementById('jd').value;
+
+            if (!resumeFile || !jdText) {
+                alert("Please provide both a resume and a job description.");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "Analyzing...";
+
+            const formData = new FormData();
+            formData.append('resume', resumeFile);
+            formData.append('job_description', jdText);
+
+            try {
+                const response = await fetch('/api/v1/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error(await response.text());
+
+                const data = await response.json();
+                displayResults(data);
+            } catch (err) {
+                alert("Error: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Analyze Resume →";
+            }
+        }
+
+        function displayResults(data) {
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('atsScore').innerText = data.ats_score + " / 100";
+            document.getElementById('grade').innerText = "Grade: " + data.grade;
+            document.getElementById('recommendation').innerText = data.recommendation;
+
+            const resume = document.getElementById('resumeSkills');
+            resume.innerHTML = data.resume_skills.map(s => `<span class="tag">${s}</span>`).join('');
+
+            const matched = document.getElementById('matchedSkills');
+            matched.innerHTML = data.skills_matched.map(s => `<span class="tag">${s}</span>`).join('');
+
+            const missing = document.getElementById('missingSkills');
+            missing.innerHTML = data.skills_missing.map(s => `<span class="tag tag-missing">${s}</span>`).join('');
+
+            const soft = document.getElementById('softSkills');
+            soft.innerHTML = data.soft_skills.map(s => `<span class="tag tag-soft">${s}</span>`).join('');
+
+            const br = document.getElementById('breakdown');
+            br.innerHTML = `
+                <div>Skills: ${data.sub_scores.skills}/50 <div class="progress-bar"><div class="progress-fill" style="width: ${data.sub_scores.skills*2}%"></div></div></div>
+                <div style="margin-top:0.5rem">Projects: ${data.sub_scores.projects}/30 <div class="progress-bar"><div class="progress-fill" style="width: ${data.sub_scores.projects/30*100}%"></div></div></div>
+                <div style="margin-top:0.5rem">Education: ${data.sub_scores.education}/10 <div class="progress-bar"><div class="progress-fill" style="width: ${data.sub_scores.education*10}%"></div></div></div>
+                <div style="margin-top:0.5rem">Experience: ${data.sub_scores.experience}/10 <div class="progress-bar"><div class="progress-fill" style="width: ${data.sub_scores.experience*10}%"></div></div></div>
+            `;
+            
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

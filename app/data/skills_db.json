@@ -1,0 +1,53 @@
+{
+  "technical_skills": [
+    "Python", "JavaScript", "Java", "C++", "C#", "Go", "Rust", "TypeScript", "SQL", "NoSQL",
+    "FastAPI", "Flask", "Django", "React", "Angular", "Vue.js", "Node.js", "Express.js", "Spring Boot",
+    "Docker", "Kubernetes", "Azure", "GCP", "Terraform", "Jenkins", "Git", "Redis", "Elasticsearch",
+    "Machine Learning", "Deep Learning", "NLP", "TensorFlow", "PyTorch", "Scikit-learn", "Pandas", "NumPy",
+    "HTML", "CSS", "TailwindCSS", "Bootstrap", "PostgreSQL", "MySQL", "MongoDB", "SQLite", "GraphQL", "REST API",
+    "CI/CD", "Microservices", "Serverless", "Lambdas", "Kafka", "RabbitMQ", "Linux", "Bash", "PowerShell",
+    "Manual Testing", "Automation Testing", "Unit Testing", "Integration Testing", "Regression Testing", "Performance Testing",
+    "Selenium", "Jest", "Pytest", "Cypress", "JUnit", "Appium", "Load Testing", "API Testing", "Postman", "SoapUI",
+    "Svelte", "Next.js", "Nuxt.js", "Webpack", "Babel", "Sass", "Less", "Redux", "Pinia", "Zustand", "RxJS",
+    "NestJS", "Koa", "Ruby on Rails", "Laravel", "Symfony", "PHP", "ASP.NET", "AdonisJS", "Fastify",
+    "Flutter", "React Native", "Swift", "Kotlin", "Objective-C", "Xamarin", "Ionic", "Cordova",
+    "Ansible", "Puppet", "Chef", "Prometheus", "Grafana", "ELK Stack", "CircleCI", "GitLab CI", "GitHub Actions",
+    "PySpark", "Hadoop", "Hive", "Spark", "Tableau", "PowerBI", "R", "Julia", "Matplotlib", "Seaborn", "Airflow", "DVC",
+    "Penetration Testing", "OWASP", "Kali Linux", "Wireshark", "Metasploit", "Ethical Hacking", "OAuth2", "JWT",
+    "Spring Framework", "Hibernate", "Entity Framework", "Clojure", "Elixir", "Scala", "Dart", "Solidity",
+    "BigQuery", "Snowflake", "DynamoDB", "Cassandra", "CouchDB", "Neo4j", "Firebase", "Realtime Database",
+    "Terraform Cloud", "CloudFormation", "OpenStack", "Vagrant", "Nginx", "Apache", "Traefik", "Istio",
+    "Websocket", "gRPC", "MQTT", "Socket.io", "Vite", "ESLint", "Prettier", "Playwright", "Mocha", "Chai", "Enzyme"
+  ],
+  "skill_aliases": {
+    "react": ["reactjs", "react.js", "react js"],
+    "nodejs": ["node", "node.js", "node js"],
+    "postgresql": ["postgres", "psql"],
+    "kubernetes": ["k8s"],
+    "machine learning": ["ml"],
+    "deep learning": ["dl"],
+    "natural language processing": ["nlp"],
+    "continuous integration": ["ci", "ci/cd"],
+    "amazon web services": ["aws"],
+    "google cloud platform": ["gcp"],
+    "mongodb": ["mongo"],
+    "elasticsearch": ["elastic"],
+    "github actions": ["gha"],
+    "visual studio code": ["vs code", "vscode"],
+    "javascript": ["js"],
+    "typescript": ["ts"]
+  },
+  "soft_skills": [
+    "communication", "teamwork", "team player", "collaboration", "leadership", "leader",
+    "problem solving", "problem-solving", "critical thinking", "time management",
+    "adaptability", "flexibility", "creativity", "innovation", "initiative",
+    "attention to detail", "detail-oriented", "organized", "self-motivated",
+    "motivated", "proactive", "quick learner", "fast learner", "multitasking",
+    "decision making", "conflict resolution", "negotiation", "presentation",
+    "public speaking", "mentoring", "coaching", "empathy", "interpersonal",
+    "work ethic", "accountability", "ownership", "reliability", "punctual",
+    "analytical", "research", "documentation", "planning", "goal-oriented",
+    "result-oriented", "customer service", "stakeholder management",
+    "cross-functional", "agile mindset", "growth mindset", "open to feedback"
+  ]
+}

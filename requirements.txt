@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+python-multipart
+pydantic
+pydantic-settings
+google-generativeai
+pdfplumber
+python-dotenv
+python-docx
+PyPDF2
+jinja2
+aiofiles
